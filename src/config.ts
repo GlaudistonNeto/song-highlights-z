@@ -22,13 +22,17 @@ export type ModelConfig = {
 
 console.assert(process.env.OPENROUTER_API_KEY, 'OPENROUTER_API_KEY is not set in environment variables');
 
+const model = process.env.OPENROUTER_MODEL?.trim() || 'baidu/ernie-5.5-flash-preview:free';
+
+if (!model.endsWith(':free')) {
+  throw new Error('OPENROUTER_MODEL must be a free model ID ending in :free.');
+}
+
 export const config: ModelConfig = {
   apiKey: process.env.OPENROUTER_API_KEY!,
   httpReferer: '',
   xTitle: 'IA Devs - Prompt Chaining Article Generator',
-  models: [
-    'arcee-ai/trinity-large-preview:free',
-  ],
+  models: [model],
   provider: {
     sort: {
       by: 'throughput', // Route to model with highest throughput (fastest response)
